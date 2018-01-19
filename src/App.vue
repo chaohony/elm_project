@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <div class="header">我是header</div>
+    <div class="tab">我是tab</div>
     <router-view/>
+    <div class="shopcart">我是购物车</div>
   </div>
 </template>
 
@@ -11,13 +13,6 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="stylus" stylesheet="stylus/text">
+
 </style>
