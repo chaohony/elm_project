@@ -30,6 +30,7 @@
                       <span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
                     </h5>
                   </div>
+                  <cart-control :hook="[index,i]" @add="add($event)" @dec="dec($event)" :food="food"></cart-control>
                 </div>
               </li>
             </ul>
@@ -42,6 +43,8 @@
 <script>
 import axios from 'axios'
 import BScroll from 'better-scroll'
+import CartControl from '@/components/cartcontrol/cartcontrol'
+import eventBus from '@/common/js/eventBus'
 const ERR_OK = 0
 export default {
   props: {},
@@ -98,10 +101,32 @@ export default {
         this.FoodGroup = this.$refs.food.getElementsByClassName('food-item')
       }
       this.foodScroll.scrollToElement(this.FoodGroup[index], 300)
+    },
+    _initEventBus () {
+      eventBus.$on('add', (food) => {
+        let hook = food.hook
+        let index0 = hook[0]
+        let index1 = hook[1]
+        this.goods[index0].foods[index1].count = food.count
+      })
+      eventBus.$on('dec', (food) => {
+        let hook = food.hook
+        let index0 = hook[0]
+        let index1 = hook[1]
+        this.goods[index0].foods[index1].count--
+      })
+    },
+    add (food) {
+      eventBus.$emit('add', food)
+    },
+    dec (food) {
+      eventBus.$emit('dec', food)
     }
   },
   computed: {},
-  components: {},
+  components: {
+    CartControl
+  },
   data () {
     return {
       goods: [],
@@ -121,8 +146,18 @@ export default {
           this._initFoodScroll()
           this._calculateHeight()
           this._onScroll()
+          this._initEventBus()
         })
       }
+      eventBus.$on('empty', () => {
+        this.goods.forEach((item, index) => {
+          item.foods.forEach((food, i) => {
+            if (food.count) {
+              food.count = 0
+            }
+          })
+        })
+      })
     })
   }
 }
@@ -183,16 +218,17 @@ export default {
             padding 18px
             .content
               display flex
+              position relative
               border-1px()
               &::after
                 bottom -18px
               .content-left
-                flex 0 0 90px
-                width 80px
-                height 80px
+                flex 0 0 80px
+                width 70px
+                height 70px
                 img
-                  width 80px
-                  height 80px
+                  width 70px
+                  height 70px
               .content-right
                 h2
                   margin-top 2px
@@ -217,4 +253,11 @@ export default {
                   .now
                     font-size 14px
                     display inline-block
+                  .old
+                    color-147()
+                    text-decoration line-through
+              .cartcontrol
+                position absolute
+                right 0
+                bottom 0
 </style>

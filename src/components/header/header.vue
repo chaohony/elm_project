@@ -223,6 +223,7 @@ export default {
     left 0
     width 100%
     overflow hidden
+    z-index 100
     background rgba(7,17,27,.8)
     padding-top 64px
     transition all .3s linear
