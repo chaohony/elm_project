@@ -3,7 +3,7 @@
     <v-header :seller="seller"></v-header>
     <Tab></Tab>
     <router-view :seller="seller"/>
-    <div class="shopcart">我是购物车</div>
+    <!-- <div class="shopcart">我是购物车</div> -->
   </div>
 </template>
 
