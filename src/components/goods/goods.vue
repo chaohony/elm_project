@@ -36,14 +36,14 @@
             </ul>
           </li>
         </ul>
-        <food 
-        @addFirst="addFirst($event)" 
-        ref="detailfood" 
-        :selectedFood="selectedFood"
-        @add="add($event)" 
-        @dec="dec($event)"
-        @addAni="addAni($event)"></food>
       </div>
+      <food 
+      @addFirst="addFirst($event)" 
+      ref="detailfood" 
+      :selectedFood="selectedFood"
+      @add="add($event)" 
+      @dec="dec($event)"
+      @addAni="addAni($event)"></food>
     </div>
 </template>
 
