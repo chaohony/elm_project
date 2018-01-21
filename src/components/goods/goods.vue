@@ -30,7 +30,7 @@
                       <span class="old" v-show="food.oldPrice">￥{{ food.oldPrice }}</span>
                     </h5>
                   </div>
-                  <cart-control :hook="[index,i]" @add="add($event)" @dec="dec($event)" :food="food"></cart-control>
+                  <cart-control :hook="[index,i]" @addAni="addAni($event)" @add="add($event)" @dec="dec($event)" :food="food"></cart-control>
                 </div>
               </li>
             </ul>
@@ -103,24 +103,27 @@ export default {
       this.foodScroll.scrollToElement(this.FoodGroup[index], 300)
     },
     _initEventBus () {
-      eventBus.$on('add', (food) => {
+      eventBus.$on('add_from_shopcart', (food) => {
         let hook = food.hook
         let index0 = hook[0]
         let index1 = hook[1]
         this.goods[index0].foods[index1].count = food.count
       })
-      eventBus.$on('dec', (food) => {
+      eventBus.$on('dec_from_shopcart', (food) => {
         let hook = food.hook
         let index0 = hook[0]
         let index1 = hook[1]
-        this.goods[index0].foods[index1].count--
+        this.goods[index0].foods[index1].count = food.count
       })
     },
+    addAni (dom) {
+      eventBus.$emit('addAni_from_goods', dom)
+    },
     add (food) {
-      eventBus.$emit('add', food)
+      eventBus.$emit('add_from_goods', food)
     },
     dec (food) {
-      eventBus.$emit('dec', food)
+      eventBus.$emit('dec_from_goods', food)
     }
   },
   computed: {},

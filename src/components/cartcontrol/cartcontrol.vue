@@ -13,7 +13,7 @@
       </div>
       <div class="add" @click.stop.prevent="_add">
         <span>
-          <i class="icon-add_circle"></i>
+          <i ref="idom" class="icon-add_circle"></i>
         </span>
       </div>
     </div>
@@ -43,6 +43,7 @@ export default {
         this.food.count++
       }
       this.$emit('add', this.food)
+      this.$emit('addAni', this.$refs.idom)
     },
     _dec () {
       if (this.food.count === 0) {

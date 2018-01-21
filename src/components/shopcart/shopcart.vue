@@ -1,5 +1,5 @@
 <template>
-    <div class="shopcart" @click="_show">
+    <div class="shopcart" @click="_toggleshow">
       <div class="wrapper">
         <div class="shopcart-left">
           <div class="big-icon">
@@ -13,12 +13,25 @@
           <span class="price" :class="{active: totalPrice > 0}">￥{{ totalPrice }}</span>
           <span class="delivery">另需配送费{{ deliveryPrice }}元</span>
         </div>
-        <div class="shopcart-right" :class="{active: totalPrice >= 20}">
+        <div class="shopcart-right" @click.stop.prevent="hit" :class="{active: totalPrice >= 20}">
           {{ tipWord }}
+        </div>
+        <div class="balls">
+          <div :key="index" v-for="(ball, index) in balls">
+            <transition 
+            class="drop" 
+            @before-enter="beforeDrop" 
+            @enter="dropping" 
+            @after-enter="afterDrop">
+              <div class="ball" v-show="ball.show">
+                <span class="inner"></span>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
       <transition name="fade">
-        <div class="detail" v-show="showFlag">
+        <div class="detail" v-show="showFlag" @click.stop.prevent>
           <div class="header">
             <span class="title">购物车</span>
             <span class="empty" @click="_empty">清空</span>
@@ -31,7 +44,7 @@
                   <span class="price"><span class="yuan">￥</span>{{ item.price }}</span>
                 </div>
                 <div class="item-right">
-                  <cart-control @add="add($event)" @dec="dec($event)" :food="item"></cart-control>
+                  <cart-control @addAni="_handleAnimation($event)" @add="add($event)" @dec="dec($event)" :food="item"></cart-control>
                 </div>
               </li>
             </ul>
@@ -61,32 +74,30 @@ export default {
   },
   methods: {
     _initEventBus () {
-      eventBus.$on('add', (food) => {
+      eventBus.$on('add_from_goods', (food) => {
         let hook = food.hook
         let index0 = hook[0]
         let index1 = hook[1]
-        console.log(this.goods[index0].foods[index1])
-        // debugger
         // console.log在下面这条语句之前也能输出count 不懂
+        // console.log(this.goods[index0].foods[index1])
         this.$set(this.goods[index0].foods[index1], 'count', food.count)
         this.$set(this.goods[index0].foods[index1], 'hook', food.hook)
       })
-      eventBus.$on('dec', (food) => {
+      eventBus.$on('dec_from_goods', (food) => {
         let hook = food.hook
         let index0 = hook[0]
         let index1 = hook[1]
-        let target = this.goods[index0].foods[index1]
-        if (target.count === 0) {
-          return
-        }
-        target.count--
+        this.goods[index0].foods[index1].count = food.count
+      })
+      eventBus.$on('addAni_from_goods', (dom) => {
+        this._handleAnimation(dom)
       })
     },
     add (food) {
-      eventBus.$emit('add', food)
+      eventBus.$emit('add_from_shopcart', food)
     },
     dec (food) {
-      eventBus.$emit('dec', food)
+      eventBus.$emit('dec_from_shopcart', food)
     },
     _empty () {
       this.goods.forEach((item, index) => {
@@ -98,8 +109,11 @@ export default {
       })
       eventBus.$emit('empty')
     },
-    _show () {
-      this.showFlag = true
+    _toggleshow () {
+      if (!this.totalCount) {
+        return
+      }
+      this.fold = !this.fold
       this.$nextTick(() => {
         if (!this.scroll) {
           this.scroll = new BScroll(this.$refs.content, {click: true})
@@ -108,8 +122,65 @@ export default {
         }
       })
     },
+    hit () {
+      if (this.totalPrice >= 20) {
+        alert(`请支付${this.totalPrice}元`)
+      }
+    },
     _hide () {
-      this.showFlag = false
+      this.fold = true
+    },
+    turnDownFold () {
+      this.fold = true
+    },
+    _handleAnimation (dom) {
+      let balls = this.balls
+      for (let i = 0; i < balls.length; i++) {
+        if (!balls[i].show) {
+          balls[i].dom = dom
+          balls[i].show = true
+          this.dropBalls.push(balls[i])
+          return
+        }
+      }
+    },
+    beforeDrop (el) {
+      let balls = this.balls
+      let len = balls.length
+      while (len--) {
+        let ball = balls[len]
+        if (ball.show) {
+          let rec = ball.dom.getBoundingClientRect()
+          let x = rec.left - 32
+          let y = -(window.innerHeight - rec.top - 22)
+          el.style.display = ''
+          el.style.transform = `translate3d(0, ${y}px, 0)`
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`
+          let inner = el.getElementsByClassName('inner')[0]
+          inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+          inner.style.transform = `translate3d(${x}px, 0, 0)`
+          return
+        }
+      }
+    },
+    dropping (el, done) {
+      /* eslint-disable no-unused-vars */
+      let height = el.offsetHeight
+      this.$nextTick(() => {
+        el.style.webkitTransform = 'translate3d(0,0,0)'
+        el.style.transform = `translate3d(0, 0, 0)`
+        let inner = el.getElementsByClassName('inner')[0]
+        inner.style.webkitTransform = 'translate3d(0,0,0)'
+        inner.style.transform = `translate3d(0, 0, 0)`
+        el.addEventListener('transitionend', done)
+      })
+    },
+    afterDrop (el) {
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
     }
   },
   computed: {
@@ -143,6 +214,16 @@ export default {
         price += item.count * item.price
       })
       return price
+    },
+    showFlag () {
+      if (this.fold) {
+        return false
+      }
+      if (!this.totalCount) {
+        this.turnDownFold()
+        return false
+      }
+      return true
     }
   },
   components: {
@@ -151,7 +232,25 @@ export default {
   data () {
     return {
       goods: [],
-      showFlag: false
+      fold: true,
+      balls: [
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        }
+      ],
+      dropBalls: []
     }
   },
   created () {
@@ -245,6 +344,23 @@ export default {
       &.active
         color #ffffff
         background #00b43c
+    .balls
+      position absolute
+      width 16px
+      height 16px
+      top 8px
+      left 38px
+      font-size 0
+      .ball
+        transition all .6s cubic-bezier(.51,-0.52,.95,.88)
+        position absolute
+        .inner
+          transition all .6s linear
+          display inline-block
+          width 16px
+          height 16px
+          background rgb(0,160,220)
+          border-radius 50%
   .detail
     position fixed
     bottom 48px
