@@ -10,8 +10,8 @@
               <span class="sellcount">月售{{ seller.sellCount }}单</span>
             </div>
             <div class="balloon">
-              <i class="icon icon-favorite"></i>
-              <span class="collect">已收藏</span>
+              <i class="icon icon-favorite" :class="{active: flag}" @click="toggle"></i>
+              <span class="collect">{{ info }}</span>
             </div>
           </div>
           <div class="intro_2">
@@ -72,6 +72,7 @@
 import Star from '@/components/star/star'
 import Split from '@/components/split/split'
 import BScroll from 'better-scroll'
+import {loadFromLocal, saveToLocal} from '@/common/js/store'
 const ERR_OK = 0
 export default {
   props: {
@@ -114,16 +115,28 @@ export default {
           this.xscroll.refresh()
         }
       }
+    },
+    toggle () {
+      let temp = this.flag
+      saveToLocal(this.seller.id, 'flag', !temp)
+      this.flag = loadFromLocal(this.seller.id, 'flag', false)
     }
   },
-  computed: {},
+  computed: {
+    info () {
+      return this.flag ? '已收藏' : '收藏'
+    }
+  },
   components: {
     Star,
     Split
   },
   data () {
     return {
-      imgMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+      imgMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
+      flag: (() => {
+        return loadFromLocal(this.seller.id, 'flag', false)
+      })()
     }
   },
   created () {
@@ -179,10 +192,12 @@ export default {
         .icon
           display block
           font-size 24px
-          color rgb(240,20,20)
           line-height 24px
           text-align center
           margin-bottom 4px
+          color rgb(77,85,93)
+          &.active
+            color rgb(240,20,20)
         .collect
           display block
           font-size 12px
