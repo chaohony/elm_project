@@ -15,7 +15,7 @@
           <li v-for="(item,index) in goods" :key="index" class="food-item">
             <h1 class="title">{{ item.name }}</h1>
             <ul class="individual-wrapper">
-              <li v-for="(food,i) in item.foods" :key="i" class="individual">
+              <li v-for="(food,i) in item.foods" :key="i" @click.stop.prevent="select(food,[index,i])" class="individual">
                 <div class="content">
                   <div class="content-left"><img :src="food.icon" alt=""></div>
                   <div class="content-right">
@@ -36,6 +36,13 @@
             </ul>
           </li>
         </ul>
+        <food 
+        @addFirst="addFirst($event)" 
+        ref="detailfood" 
+        :selectedFood="selectedFood"
+        @add="add($event)" 
+        @dec="dec($event)"
+        @addAni="addAni($event)"></food>
       </div>
     </div>
 </template>
@@ -45,10 +52,14 @@ import axios from 'axios'
 import BScroll from 'better-scroll'
 import CartControl from '@/components/cartcontrol/cartcontrol'
 import eventBus from '@/common/js/eventBus'
+import Food from '@/components/food/food'
 const ERR_OK = 0
 export default {
   props: {},
   methods: {
+    addFirst (food) {
+      this.add(food)
+    },
     _initMenuScroll () {
       if (!this.menuScroll) {
         this.menuScroll = new BScroll(this.$refs.menu, {click: true})
@@ -77,6 +88,14 @@ export default {
         arr.push(count)
       }
       this.heightArr = arr
+    },
+    select (food, arr) {
+      this.selectedFood[0] = food
+      this.selectedFood[1] = arr
+      this.$refs.detailfood.show()
+    },
+    hideFood () {
+      this.foodFlag = false
     },
     _onScroll () {
       if (!this.MenuGroup.length) {
@@ -128,7 +147,8 @@ export default {
   },
   computed: {},
   components: {
-    CartControl
+    CartControl,
+    Food
   },
   data () {
     return {
@@ -137,7 +157,9 @@ export default {
       heightArr: [],
       currentIndex: 0,
       MenuGroup: [],
-      FoodGroup: []
+      FoodGroup: [],
+      foodFlag: false,
+      selectedFood: []
     }
   },
   created () {
