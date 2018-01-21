@@ -53,7 +53,7 @@
                 </div>
               </div>
               <div class="floor2">
-                <i class="icon" :class="{'icon-thumb_down': item.rateType===0,'icon-thumb_up': item.rateType===1}"></i>
+                <i class="icon" :class="{'icon-thumb_down': item.rateType===1,'icon-thumb_up': item.rateType===0}"></i>
                 {{ item.text }}
               </div>
             </li>
