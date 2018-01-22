@@ -134,6 +134,15 @@ export default {
         let index1 = hook[1]
         this.goods[index0].foods[index1].count = food.count
       })
+      eventBus.$on('empty', () => {
+        this.goods.forEach((item, index) => {
+          item.foods.forEach((food, i) => {
+            if (food.count) {
+              food.count = 0
+            }
+          })
+        })
+      })
     },
     addAni (dom) {
       eventBus.$emit('addAni_from_goods', dom)
@@ -173,16 +182,7 @@ export default {
           this._onScroll()
           this._initEventBus()
         })
-      }
-      eventBus.$on('empty', () => {
-        this.goods.forEach((item, index) => {
-          item.foods.forEach((food, i) => {
-            if (food.count) {
-              food.count = 0
-            }
-          })
-        })
-      })
+      }      
     })
   }
 }

@@ -78,8 +78,6 @@ export default {
         let hook = food.hook
         let index0 = hook[0]
         let index1 = hook[1]
-        // console.log在下面这条语句之前也能输出count 不懂
-        // console.log(this.goods[index0].foods[index1])
         this.$set(this.goods[index0].foods[index1], 'count', food.count)
         this.$set(this.goods[index0].foods[index1], 'hook', food.hook)
       })
@@ -352,10 +350,10 @@ export default {
       left 38px
       font-size 0
       .ball
-        transition all .6s cubic-bezier(.51,-0.52,.95,.88)
+        transition all .5s cubic-bezier(.51,-0.52,.95,.88)
         position absolute
         .inner
-          transition all .6s linear
+          transition all .5s linear
           display inline-block
           width 16px
           height 16px

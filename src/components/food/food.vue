@@ -187,7 +187,7 @@ export default {
   &.move-enter,&.move-leave-to
     transform translate3d(100%,0,0)
   .header
-    widht 100%
+    width 100%
     height 0
     line-height 0
     padding-top 100%
