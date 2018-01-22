@@ -10,12 +10,12 @@
           <div class="right">
             <div class="floor1">
               <span class="text">服务态度</span>
-              <star :size="18" :count="seller.serviceScore"></star>
+              <star :size="12" :count="seller.serviceScore"></star>
               <span class="score">{{ seller.serviceScore }}</span>
             </div>
             <div class="floor2">
               <span class="text">食物评分</span>
-              <star :size="18" :count="seller.foodScore"></star>
+              <star :size="12" :count="seller.foodScore"></star>
               <span class="score">{{ seller.foodScore }}</span>
             </div>
             <div class="floor1">
@@ -159,7 +159,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixin.styl"
 .ratings
   position fixed
@@ -199,6 +199,7 @@ export default {
       padding 0 24px
       .floor1,.floor2,.floor3
         margin-bottom 8px
+        font-size 0
         .text
           font-size 12px
           color-7()
@@ -206,14 +207,7 @@ export default {
           display inline-block
           margin-right 12px
         .star
-          display inline-block
           margin-right 6px
-          .s
-            margin-right 6px
-            width 12px
-            height 12px
-            background-size 12px 12px
-            background-repeat no-repeat
         .score
           font-size 12px
           color rgb(255,153,0)

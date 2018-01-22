@@ -25,7 +25,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 .tab
   height 40px
   border-bottom 1px solid rgba(7,17,27,.1)

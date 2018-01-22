@@ -173,7 +173,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixin.styl"
 .food
   position fixed
@@ -183,7 +183,7 @@ export default {
   left 0
   z-index 200
   background #ffffff
-  transition all .4s linear
+  transition all .2s linear
   &.move-enter,&.move-leave-to
     transform translate3d(100%,0,0)
   .header

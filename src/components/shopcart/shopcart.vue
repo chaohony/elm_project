@@ -261,7 +261,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixin.styl"
 .shopcart
   position fixed
@@ -350,10 +350,10 @@ export default {
       left 38px
       font-size 0
       .ball
-        transition all .5s cubic-bezier(.51,-0.52,.95,.88)
+        transition all .4s cubic-bezier(.51,-0.52,.95,.88)
         position absolute
         .inner
-          transition all .5s linear
+          transition all .4s linear
           display inline-block
           width 16px
           height 16px

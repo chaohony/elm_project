@@ -5,7 +5,7 @@
           <div class="intro_1">
             <div class="content">
               <h1 class="name">{{ seller.name }}</h1>
-              <star :size="18" :count="seller.score"></star>
+              <star :size="12" :count="seller.score"></star>
               <span class="ratingcount">({{ seller.ratingCount }})</span>
               <span class="sellcount">月售{{ seller.sellCount }}单</span>
             </div>
@@ -147,7 +147,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixin.styl"
 .seller
   position fixed
@@ -173,17 +173,15 @@ export default {
         .star
           display inline-block
           margin-right 8px
-          .s
-            margin-right 4px
-            &:last-child
-              margin-right 0
+          position relative
+          top 2px
         .ratingcount,.sellcount
           display inline-block
           font-size 10px
           color rgb(77,85,93)
           line-height 18px
           margin-right 12px
-          vertical-align top
+          vertical-align baseline
       .balloon
         position absolute
         right 0

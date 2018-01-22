@@ -41,7 +41,7 @@ export default {
   }
 }
 </script>
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped lang="stylus" rel="stylesheet/stylus">
 @import "../../common/stylus/mixin.styl"
 .star
  display inline-block
@@ -76,7 +76,7 @@ export default {
     height 12px
     background-size 12px 12px
     background-repeat no-repeat
-    margin-right 12px
+    margin-right 6px
     &.on
       bg-img('./star24_on')
     &.half
